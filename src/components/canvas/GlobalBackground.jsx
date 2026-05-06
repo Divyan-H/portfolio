@@ -22,7 +22,9 @@ export default function GlobalBackground() {
     }
 
     // ── Create Particles ──
-    const particleCount = Math.min(100, Math.floor((window.innerWidth * window.innerHeight) / 10000))
+    const isMobile = window.innerWidth < 768
+    const baseCount = Math.min(100, Math.floor((window.innerWidth * window.innerHeight) / 10000))
+    const particleCount = isMobile ? Math.floor(baseCount / 3) : baseCount
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(particleCount * 3)
     const colors = new Float32Array(particleCount * 3)

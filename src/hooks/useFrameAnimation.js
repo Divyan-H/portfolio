@@ -21,6 +21,7 @@ export default function useFrameAnimation(canvasRef) {
 
   const isMobile = useRef(window.innerWidth < 768)
   const hasRevealed = useRef(false)
+  const lastDrawTime = useRef(0)
 
   // ── PRELOAD FRAMES ──
   useEffect(() => {
@@ -36,10 +37,10 @@ export default function useFrameAnimation(canvasRef) {
         drawFrame(0)
       }
       
-      // PERFORMANCE OPTIMIZATION: Early Reveal
-      // Allow user to enter after 25% of frames (about 44 frames) are loaded
-      // This makes the site feel 4x faster to load.
-      if (!hasRevealed.current && (done >= Math.floor(CFG.frameCount * 0.25) || done === CFG.frameCount)) {
+      // ULTRA-OPTIMIZATION: Immediate Reveal
+      // Allow user to enter after only 5% of frames (about 10 frames)
+      // This makes the site feel almost instant.
+      if (!hasRevealed.current && (done >= Math.floor(CFG.frameCount * 0.05) || done === CFG.frameCount)) {
         hasRevealed.current = true
         setLoaderDone()
       }
@@ -52,7 +53,6 @@ export default function useFrameAnimation(canvasRef) {
         const idx = i
         img.onload = () => onLoad(idx, img)
         img.onerror = () => { 
-          // On error, just increment done so loader doesn't hang
           done++
           if (done === CFG.frameCount && !hasRevealed.current) setLoaderDone()
         }
@@ -70,13 +70,20 @@ export default function useFrameAnimation(canvasRef) {
   const drawFrame = (idx) => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d', { alpha: false }) // Performance: disable alpha
+    
+    // PERFORMANCE OPTIMIZATION: Frame Throttling on Mobile
+    // If mobile, only draw if 32ms has passed (max 30fps) to save GPU
+    const now = performance.now()
+    if (isMobile.current && now - lastDrawTime.current < 32) return
+    lastDrawTime.current = now
+
+    const ctx = canvas.getContext('2d', { alpha: false })
     const img = framesRef.current[idx]
     
     if (!img || !img.complete || !img.naturalWidth) return
     
-    // PERFORMANCE OPTIMIZATION: Resolution Scaling for Mobile
-    const scale = isMobile.current ? 0.6 : 1.0
+    // PERFORMANCE OPTIMIZATION: Ultra-low res for Mobile
+    const scale = isMobile.current ? 0.4 : 1.0
     const targetW = Math.floor(img.naturalWidth * scale)
     const targetH = Math.floor(img.naturalHeight * scale)
 
