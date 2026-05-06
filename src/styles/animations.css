@@ -1,0 +1,43 @@
+/* ════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ════════════════════════════════ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes glitch {
+  0%, 89%, 100% { text-shadow: none; transform: none; }
+  90%  { text-shadow: -2px 0 var(--pink), 2px 0 var(--blue); transform: skewX(-1deg); }
+  92%  { text-shadow:  2px 0 var(--pink), -2px 0 var(--blue); transform: skewX(1deg); }
+  93%, 95% { text-shadow: none; transform: none; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .4; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes grid-pan {
+  to { background-position: 60px 60px; }
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .2; }
+}
+
+@keyframes orbit {
+  from { transform: rotateY(0deg)   rotateX(20deg); }
+  to   { transform: rotateY(360deg) rotateX(20deg); }
+}

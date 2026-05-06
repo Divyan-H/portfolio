@@ -1,0 +1,143 @@
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.secTag {
+  font-family: var(--mono);
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+.secTitle {
+  font-family: var(--hud);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: 4px;
+}
+
+.secLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.certsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.certCard {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.certCard:hover {
+  transform: translateX(5px);
+  border-color: var(--blue);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+}
+
+.certCard.gold {
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.certCard.gold:hover {
+  border-color: gold;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.certIcon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.certInfo {
+  flex: 1;
+}
+
+.certName {
+  font-family: var(--hud);
+  font-size: 0.95rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+.certIssuer {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.certBadgeWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.certBadge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--blue);
+  border: 1px solid var(--border);
+}
+
+.gold .certBadge {
+  background: rgba(255, 215, 0, 0.1);
+  color: gold;
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .sectionHeader {
+    margin-bottom: 2rem;
+  }
+
+  .certsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  
+  .certCard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .certIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .certIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .certName {
+    font-size: 0.85rem;
+  }
+
+  .certIssuer {
+    font-size: 0.7rem;
+  }
+
+  .certBadge {
+    font-size: 0.55rem;
+    padding: 0.2rem 0.4rem;
+  }
+}

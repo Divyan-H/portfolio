@@ -1,0 +1,187 @@
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.secTag {
+  font-family: var(--mono);
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+.secTitle {
+  font-family: var(--hud);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: 4px;
+}
+
+.secLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.marqueeWrapper {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  padding: 4rem 0; /* Add padding so 3D pop up doesn't get clipped */
+  
+  /* Fade edges into the background */
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  gap: 2rem;
+  /* Endless circular conveyor loop */
+  animation: scroll-marquee 40s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  /* Exactly 50% of the duplicated track width + half the gap = seamless loop */
+  100% { transform: translateX(calc(-50% - 1rem)); }
+}
+
+.projCard {
+  width: 480px; /* Much wider cards */
+  flex-shrink: 0;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+  /* Brightened Standby State */
+  transform: perspective(1000px) rotateX(10deg) scale(0.95);
+  filter: brightness(0.95);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.projCard:hover {
+  /* Hologram 3D Pop-Up State */
+  transform: perspective(1000px) rotateX(0deg) scale(1.1) translateY(-20px);
+  filter: brightness(1.2) grayscale(0%);
+  border-color: var(--blue);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.2);
+  z-index: 20;
+}
+
+.projHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.projIcon {
+  font-size: 2rem;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+}
+
+.projNum {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: var(--border);
+  font-weight: bold;
+}
+
+.projTitle {
+  font-family: var(--hud);
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.projDesc {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.projTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.projBtn {
+  background: none;
+  border: none;
+  color: var(--blue);
+  font-family: var(--hud);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  text-transform: uppercase;
+}
+
+.projBtn span {
+  transition: transform 0.3s;
+}
+
+.projBtn:hover {
+  color: var(--purple);
+}
+
+.projBtn:hover span {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .marqueeWrapper {
+    padding: 2rem 0;
+  }
+  
+  .projCard {
+    width: 300px; /* Smaller cards for mobile */
+    padding: 1.5rem;
+    transform: perspective(1000px) rotateX(5deg) scale(0.95);
+  }
+  
+  .projCard:hover {
+    transform: perspective(1000px) rotateX(0deg) scale(1.05) translateY(-10px);
+  }
+
+  .projNum {
+    font-size: 1.2rem;
+  }
+
+  .projTitle {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+
+  .projDesc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .projCard {
+    width: 260px; /* Even smaller for very small screens */
+  }
+}

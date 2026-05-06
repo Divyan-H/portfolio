@@ -1,0 +1,189 @@
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.secTag {
+  font-family: var(--mono);
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+.secTitle {
+  font-family: var(--hud);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: 4px;
+}
+
+.secLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.contactWrap {
+  padding: 3rem;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.contactTitle {
+  font-family: var(--hud);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff, var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.contactDesc {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 1.05rem;
+  margin-bottom: 2.5rem;
+}
+
+.contactLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.cLink:hover {
+  color: var(--blue);
+  transform: translateX(10px);
+}
+
+.cIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--blue);
+  font-size: 1.2rem;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.cLink:hover .cIcon {
+  background: rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+/* ── Terminal Styles ── */
+.terminal {
+  background: rgba(2, 8, 19, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.termTop {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.termDots {
+  display: flex;
+  gap: 6px;
+}
+
+.termDots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.termTitle {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  flex: 1;
+  text-align: center;
+}
+
+.termBody {
+  padding: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 250px;
+  color: #fff;
+}
+
+.tRow {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+}
+
+.tRow.ok {
+  color: #00ff88;
+}
+
+.tRow.hl {
+  color: var(--blue);
+}
+
+.prompt {
+  color: var(--pink);
+  margin-right: 0.5rem;
+}
+
+.typedCmd {
+  color: #fff;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #fff;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: pulse-dot 1s infinite;
+}
+
+.cursor.solid {
+  animation: none;
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contactWrap {
+    padding: 1.5rem;
+  }
+}

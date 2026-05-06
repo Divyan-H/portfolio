@@ -1,0 +1,184 @@
+/* ════════════════════════════════════════════
+   GLOBAL CSS — Variables, Reset, Base Styles
+   ════════════════════════════════════════════ */
+
+:root {
+  --blue:   #00d4ff;
+  --purple: #b44fff;
+  --pink:   #ff2d78;
+  --dark:   #020813;
+  --glass:  rgba(8, 20, 40, 0.70);
+  --border: rgba(0, 212, 255, 0.18);
+  --text:   #e8f4ff;
+  --muted:  #7a9bb5;
+  --hud:    'Orbitron', monospace;
+  --body:   'Rajdhani', sans-serif;
+  --mono:   'Share Tech Mono', monospace;
+
+  /* Spacing */
+  --section-pad: clamp(4rem, 8vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+
+  /* Transitions */
+  --t-fast:   0.18s ease;
+  --t-base:   0.30s ease;
+  --t-slow:   0.55s ease;
+  --t-phase:  0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--dark);
+  background-image:
+    radial-gradient(ellipse at 15% 40%, rgba(0,212,255,.035) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(180,79,255,.03)  0%, transparent 55%),
+    radial-gradient(ellipse at 50% 80%, rgba(0,212,255,.02)   0%, transparent 50%);
+  color: var(--text);
+  font-family: var(--body);
+  cursor: none;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar        { width: 3px; }
+::-webkit-scrollbar-track  { background: var(--dark); }
+::-webkit-scrollbar-thumb  { background: linear-gradient(var(--blue), var(--purple)); }
+
+/* ── Custom cursor ── */
+#cur {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--blue);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 14px var(--blue);
+  transition: transform .1s;
+  mix-blend-mode: screen;
+}
+#cur-ring {
+  position: fixed;
+  width: 28px; height: 28px;
+  border: 1px solid rgba(0,212,255,.35);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: transform .18s;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .6rem 1.4rem;
+  border-radius: 4px;
+  font-family: var(--hud);
+  font-size: .6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all var(--t-base);
+}
+.btn-primary   { background: linear-gradient(135deg, var(--blue), var(--purple)); color:#fff; box-shadow:0 0 20px rgba(0,212,255,.3); }
+.btn-primary:hover   { box-shadow:0 0 40px rgba(0,212,255,.6); transform:translateY(-2px); }
+.btn-secondary { background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); backdrop-filter: blur(4px); }
+.btn-secondary:hover { background:rgba(255,255,255,0.2); box-shadow:0 0 20px rgba(255,255,255,0.3); border-color:#fff; transform:translateY(-2px); }
+.btn-icon      { background:rgba(0,212,255,.07); color:var(--blue); border:1px solid var(--border); }
+.btn-icon:hover      { background:rgba(0,212,255,.14); border-color:var(--blue); transform:translateY(-2px); }
+.btn-outline   { background:transparent; color:var(--blue); border:1px solid var(--border); }
+.btn-outline:hover   { border-color:var(--blue); background:rgba(0,212,255,.06); transform:translateY(-2px); }
+
+/* ── Glass card ── */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.glass-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(0,212,255,.03),transparent);
+  pointer-events:none;
+}
+
+/* ── Tag ── */
+.tag {
+  padding: .22rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: .62rem;
+  font-family: var(--mono);
+  color: var(--blue);
+  background: rgba(0,212,255,.04);
+  transition: all .25s;
+  cursor: default;
+}
+.tag:hover {
+  border-color: var(--blue);
+  background: rgba(0,212,255,.1);
+  box-shadow: 0 0 8px rgba(0,212,255,.2);
+}
+
+/* ── Status dot ── */
+.status-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+  animation: pulse-dot 2s infinite;
+}
+
+/* ── Sections ── */
+.section {
+  position: relative;
+  z-index: 10;
+  padding: var(--section-pad);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sections that must cover the hero */
+#experience, #projects, #skills, #certifications, #contact, footer {
+  background: var(--dark);
+  background-image:
+    radial-gradient(ellipse at 15% 40%, rgba(0,212,255,.03) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(180,79,255,.025) 0%, transparent 55%);
+  position: relative;
+  z-index: 10;
+}
+
+/* Seamless bridge between sticky hero and solid sections */
+.gradientCurtain {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(2, 8, 19, 0.7) 40%, var(--dark) 100%);
+  z-index: 10;
+  margin-bottom: -1px; /* prevent microscopic gaps */
+}
+
+.gradientCurtain::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+}

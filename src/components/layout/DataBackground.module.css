@@ -1,0 +1,35 @@
+.container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  user-select: none;
+  opacity: 0.15; /* Subtle background detail */
+}
+
+.dataPoint {
+  position: absolute;
+  font-family: var(--mono);
+  color: var(--blue);
+  white-space: nowrap;
+  animation: float-data linear infinite;
+  text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+}
+
+@keyframes float-data {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100px) translateX(20px) rotate(10deg);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,343 @@
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.secTag {
+  font-family: var(--mono);
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+.secTitle {
+  font-family: var(--hud);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: 4px;
+}
+
+.secLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tlSpine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+  transform: translateX(-50%);
+}
+
+.tlItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+  width: 100%;
+}
+
+.tlItem:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.tlNode {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tlRing {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--blue);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+.tlDot {
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--blue);
+}
+
+.tlCard {
+  width: 45%;
+  padding: 2rem;
+  /* Slower, more cinematic transition */
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease, border-color 0.3s, box-shadow 0.3s;
+}
+
+.cardHidden {
+  opacity: 0;
+  transform: translateY(120px) scale(0.95);
+}
+
+.cardVisible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.tlCard:hover {
+  transform: translateY(-5px) !important;
+  border-color: var(--blue);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+}
+
+/* ── Decorative 3D Shapes ── */
+.decoContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.float1 { animation: float 6s ease-in-out infinite; }
+.float2 { animation: float 8s ease-in-out infinite reverse; }
+.float3 { animation: float 7s ease-in-out infinite 1s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+/* Hologram Cube */
+.holoCube {
+  position: absolute;
+  top: 15%;
+  right: 10%;
+  width: 60px;
+  height: 60px;
+  transform-style: preserve-3d;
+  animation: spin-cube 12s linear infinite;
+  opacity: 0.5;
+}
+
+.cubeFace {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.05);
+  box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+@keyframes spin-cube {
+  0% { transform: rotateX(0deg) rotateY(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+/* Octahedron */
+.octahedron {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform-style: preserve-3d;
+  animation: spin-octa 15s linear infinite;
+  opacity: 0.4;
+}
+
+.octaFace {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid rgba(0, 212, 255, 0.3);
+  transform-origin: 50% 100%;
+}
+
+.octaFace:nth-child(1) { transform: rotateX(35deg); }
+.octaFace:nth-child(2) { transform: rotateX(145deg); }
+.octaFace:nth-child(3) { transform: rotateY(90deg) rotateX(35deg); }
+.octaFace:nth-child(4) { transform: rotateY(90deg) rotateX(145deg); }
+.octaFace:nth-child(5) { transform: rotateY(180deg) rotateX(35deg); }
+.octaFace:nth-child(6) { transform: rotateY(180deg) rotateX(145deg); }
+.octaFace:nth-child(7) { transform: rotateY(270deg) rotateX(35deg); }
+.octaFace:nth-child(8) { transform: rotateY(270deg) rotateX(145deg); }
+
+@keyframes spin-octa {
+  from { transform: rotateY(0) rotateX(0); }
+  to { transform: rotateY(360deg) rotateX(360deg); }
+}
+
+/* Holographic Ring */
+.hologramRing {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border: 1px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  transform: rotateX(75deg);
+  animation: ring-pulse 4s ease-in-out infinite;
+  opacity: 0.4;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { transform: rotateX(75deg) scale(1); opacity: 0.2; }
+  50% { transform: rotateX(75deg) scale(1.3); opacity: 0.5; }
+}
+
+.cardHeaderDeco {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--blue);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.tlHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.tlRole {
+  font-family: var(--hud);
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.tlCo {
+  color: var(--blue);
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.tlBadge {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--blue);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+.tlDate {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.tlDesc {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.tlTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tlDeco {
+  width: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* Sync with card animation */
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+}
+
+.tlItem:nth-child(odd) .tlDeco {
+  order: 2; /* Move to right if card is left */
+}
+
+.tlItem:nth-child(even) .tlDeco {
+  order: 1; /* Move to left if card is right */
+}
+
+.decoHex {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin-y 6s linear infinite;
+}
+
+.hexPart {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--blue);
+  background: rgba(0, 212, 255, 0.05);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+.hexPart:nth-child(1) { transform: rotateY(0deg); }
+.hexPart:nth-child(2) { transform: rotateY(60deg); }
+.hexPart:nth-child(3) { transform: rotateY(120deg); }
+
+@keyframes spin-y {
+  from { transform: rotateY(0) rotateX(15deg); }
+  to { transform: rotateY(360deg) rotateX(15deg); }
+}
+
+@media (max-width: 768px) {
+  .tlDeco {
+    display: none; /* Hide on mobile to keep timeline clean */
+  }
+  .tlSpine {
+    left: 15px;
+  }
+  
+  .tlNode {
+    left: 15px;
+  }
+  
+  .tlItem, .tlItem:nth-child(even) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 40px;
+    margin-bottom: 2.5rem;
+  }
+  
+  .tlCard {
+    width: 100%;
+    padding: 1.2rem; /* Much smaller padding on mobile */
+  }
+
+  .tlRole {
+    font-size: 1rem;
+  }
+
+  .tlCo {
+    font-size: 0.8rem;
+  }
+
+  .tlDesc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .cardHeaderDeco {
+    font-size: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
