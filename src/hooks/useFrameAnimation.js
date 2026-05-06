@@ -19,6 +19,9 @@ export default function useFrameAnimation(canvasRef) {
   const setSmoothProg = useAppStore((state) => state.setSmoothProg)
   const setActivePhase = useAppStore((state) => state.setActivePhase)
 
+  const isMobile = useRef(window.innerWidth < 768)
+  const hasRevealed = useRef(false)
+
   // ── PRELOAD FRAMES ──
   useEffect(() => {
     let done = 0
@@ -33,9 +36,12 @@ export default function useFrameAnimation(canvasRef) {
         drawFrame(0)
       }
       
-      // Fake loading progress could hook in here
-      if (done === CFG.frameCount) {
-        setTimeout(() => setLoaderDone(), 1000) // Give it a sec for effect
+      // PERFORMANCE OPTIMIZATION: Early Reveal
+      // Allow user to enter after 25% of frames (about 44 frames) are loaded
+      // This makes the site feel 4x faster to load.
+      if (!hasRevealed.current && (done >= Math.floor(CFG.frameCount * 0.25) || done === CFG.frameCount)) {
+        hasRevealed.current = true
+        setLoaderDone()
       }
     }
 
@@ -45,7 +51,11 @@ export default function useFrameAnimation(canvasRef) {
         const img = new Image()
         const idx = i
         img.onload = () => onLoad(idx, img)
-        img.onerror = () => { const b = new Image(); onLoad(idx, b) }
+        img.onerror = () => { 
+          // On error, just increment done so loader doesn't hang
+          done++
+          if (done === CFG.frameCount && !hasRevealed.current) setLoaderDone()
+        }
         img.src = CFG.framePath(i + 1)
       }
       if (end < CFG.frameCount) {
@@ -53,37 +63,29 @@ export default function useFrameAnimation(canvasRef) {
       }
     }
 
-    // Failsafe: force loader done after 5s regardless of frame status
-    const failsafe = setTimeout(() => {
-      if (done < CFG.frameCount) {
-        console.warn('Loader timed out, forcing visibility...')
-        setLoaderDone()
-      }
-    }, 5000)
-
     batch(0)
-
-    return () => clearTimeout(failsafe)
   }, [canvasRef, setLoaderDone])
 
   // ── DRAW FRAME ──
   const drawFrame = (idx) => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { alpha: false }) // Performance: disable alpha
     const img = framesRef.current[idx]
     
     if (!img || !img.complete || !img.naturalWidth) return
     
-    // Set canvas internal resolution to match the frame exactly once
-    if (canvas.width !== img.naturalWidth) {
-      canvas.width = img.naturalWidth
-      canvas.height = img.naturalHeight
+    // PERFORMANCE OPTIMIZATION: Resolution Scaling for Mobile
+    const scale = isMobile.current ? 0.6 : 1.0
+    const targetW = Math.floor(img.naturalWidth * scale)
+    const targetH = Math.floor(img.naturalHeight * scale)
+
+    if (canvas.width !== targetW) {
+      canvas.width = targetW
+      canvas.height = targetH
     }
     
-    // Draw the image filling the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, targetW, targetH)
   }
 
   // ── RENDER LOOP ──
