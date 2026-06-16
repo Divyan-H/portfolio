@@ -124,8 +124,12 @@ export default function NebulaFlow({ contained = false }) {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const coarse = window.matchMedia('(pointer: coarse)').matches
     const mobile = window.innerWidth < 768
-    // render below native res — the nebula is soft, so upscaling is invisible
-    const renderScale = mobile ? 0.5 : 0.7
+    // Mobile: 35% res (shader is soft, upscaling is invisible) + 3 FBM octaves instead of 5
+    const renderScale = mobile ? 0.35 : 0.7
+    const octaves = mobile ? 3 : 5
+
+    // Build fragment shader with platform-appropriate octave count
+    const FRAG_MOBILE = FRAG.replace('for (int i = 0; i < 5; i++){', `for (int i = 0; i < ${octaves}; i++){`)
 
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'high-performance' })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2) * renderScale)
@@ -144,7 +148,7 @@ export default function NebulaFlow({ contained = false }) {
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
     }
 
-    const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms, depthTest: false, depthWrite: false })
+    const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG_MOBILE, uniforms, depthTest: false, depthWrite: false })
     const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
     scene.add(quad)
 
@@ -174,7 +178,7 @@ export default function NebulaFlow({ contained = false }) {
 
     const loop = (t) => {
       raf = requestAnimationFrame(loop)
-      if (mobile && t - last < 33) return // ~30fps cap on mobile
+      if (mobile && t - last < 50) return // ~20fps cap on mobile
       last = t
       renderFrame()
     }

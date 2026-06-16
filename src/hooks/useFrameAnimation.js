@@ -1,136 +1,122 @@
 import { useEffect, useRef } from 'react'
 import useAppStore from '@store/useAppStore'
 
-const CFG = {
-  frameCount: 176,
-  framePath: (n) => `/frames/ezgif-frame-${String(n).padStart(3, '0')}.jpg`,
-  ease: 0.09,
-  batchSize: 12,
-}
+const CFG        = { ease: 0.09, batchSize: 12 }
+const TOTAL_FRAMES = 176
 
 export default function useFrameAnimation(canvasRef) {
-  const framesRef = useRef([])
-  const curFrameRef = useRef(0)
+  const framesRef     = useRef([])
+  const curFrameRef   = useRef(0)
   const smoothProgRef = useRef(0)
-  const reqRef = useRef()
+  const reqRef        = useRef(null)
+  const lastLoopTime  = useRef(0)
 
-  const rawProg = useAppStore((state) => state.rawProg)
-  const setLoaderDone = useAppStore((state) => state.setLoaderDone)
-  const setSmoothProg = useAppStore((state) => state.setSmoothProg)
+  const setLoaderDone  = useAppStore((state) => state.setLoaderDone)
+  const setSmoothProg  = useAppStore((state) => state.setSmoothProg)
   const setActivePhase = useAppStore((state) => state.setActivePhase)
 
-  const isMobile = useRef(window.innerWidth < 768)
+  const isMobile    = useRef(typeof window !== 'undefined' && window.innerWidth < 768)
   const hasRevealed = useRef(false)
-  const lastDrawTime = useRef(0)
 
-  // ── PRELOAD FRAMES ──
+  // ── DRAW ──
+  // Frames are pre-sized per platform (frames-sm = 960×540 for mobile, frames = 2560×1440 for desktop).
+  // No JS downscale needed — draw at natural size so canvas resolution matches the source.
+  const drawFrame = (idx) => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const img = framesRef.current[idx]
+    if (!img || !img.complete || !img.naturalWidth) return
+    const w = img.naturalWidth, h = img.naturalHeight
+    if (canvas.width !== w) { canvas.width = w; canvas.height = h }
+    canvas.getContext('2d', { alpha: false }).drawImage(img, 0, 0, w, h)
+  }
+
+  // ── PRELOAD ──
+  // Mobile: frames-sm/ (960×540, ~38 KB each) + STEP=2 → 88 frames × 38 KB ≈ 3.3 MB
+  // Desktop: frames/ (2560×1440, ~86 KB each) + STEP=1 → 176 frames × 86 KB ≈ 14.8 MB
   useEffect(() => {
+    const mobile = isMobile.current
+    const STEP   = mobile ? 2 : 1
+    const COUNT  = Math.ceil(TOTAL_FRAMES / STEP)
+    const dir    = mobile ? 'frames-sm' : 'frames'
+    const path   = (n) => `/${dir}/ezgif-frame-${String(n * STEP + 1).padStart(3, '0')}.jpg`
+
     let done = 0
-    framesRef.current = new Array(CFG.frameCount)
+    framesRef.current = new Array(COUNT)
 
     const onLoad = (i, img) => {
       framesRef.current[i] = img
       done++
-      
-      // Draw first frame immediately
-      if (i === 0 && canvasRef.current) {
-        drawFrame(0)
-      }
-      
-      // ULTRA-OPTIMIZATION: Immediate Reveal
-      // Allow user to enter after only 5% of frames (about 10 frames)
-      // This makes the site feel almost instant.
-      if (!hasRevealed.current && (done >= Math.floor(CFG.frameCount * 0.05) || done === CFG.frameCount)) {
+      if (i === 0 && canvasRef.current) drawFrame(0)
+      if (!hasRevealed.current && (done >= Math.floor(COUNT * 0.05) || done === COUNT)) {
         hasRevealed.current = true
         setLoaderDone()
       }
     }
 
     const batch = (start) => {
-      const end = Math.min(start + CFG.batchSize, CFG.frameCount)
+      const end = Math.min(start + CFG.batchSize, COUNT)
       for (let i = start; i < end; i++) {
         const img = new Image()
         const idx = i
-        img.onload = () => onLoad(idx, img)
-        img.onerror = () => { 
-          done++
-          if (done === CFG.frameCount && !hasRevealed.current) setLoaderDone()
-        }
-        img.src = CFG.framePath(i + 1)
+        img.onload  = () => onLoad(idx, img)
+        img.onerror = () => { done++; if (done === COUNT && !hasRevealed.current) setLoaderDone() }
+        img.src = path(i)
       }
-      if (end < CFG.frameCount) {
-        requestAnimationFrame(() => batch(end))
-      }
+      if (end < COUNT) requestAnimationFrame(() => batch(end))
     }
-
     batch(0)
   }, [canvasRef, setLoaderDone])
 
-  // ── DRAW FRAME ──
-  const drawFrame = (idx) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    
-    // PERFORMANCE OPTIMIZATION: Frame Throttling on Mobile
-    // If mobile, only draw if 32ms has passed (max 30fps) to save GPU
-    const now = performance.now()
-    if (isMobile.current && now - lastDrawTime.current < 32) return
-    lastDrawTime.current = now
-
-    const ctx = canvas.getContext('2d', { alpha: false })
-    const img = framesRef.current[idx]
-    
-    if (!img || !img.complete || !img.naturalWidth) return
-    
-    // PERFORMANCE OPTIMIZATION: Ultra-low res for Mobile
-    const scale = isMobile.current ? 0.4 : 1.0
-    const targetW = Math.floor(img.naturalWidth * scale)
-    const targetH = Math.floor(img.naturalHeight * scale)
-
-    if (canvas.width !== targetW) {
-      canvas.width = targetW
-      canvas.height = targetH
-    }
-    
-    ctx.drawImage(img, 0, 0, targetW, targetH)
-  }
-
   // ── RENDER LOOP ──
   useEffect(() => {
-    const renderLoop = () => {
-      // Easing logic
-      smoothProgRef.current += (useAppStore.getState().rawProg - smoothProgRef.current) * CFG.ease
+    const mobile = isMobile.current
+    const STEP   = mobile ? 2 : 1
+    const COUNT  = Math.ceil(TOTAL_FRAMES / STEP)
+
+    const renderLoop = (t) => {
+      // Throttle entire loop to ~30 fps on mobile (not just the draw call).
+      if (mobile && t - lastLoopTime.current < 33) {
+        reqRef.current = requestAnimationFrame(renderLoop)
+        return
+      }
+      lastLoopTime.current = t
+
+      const rawProg = useAppStore.getState().rawProg
+      smoothProgRef.current += (rawProg - smoothProgRef.current) * CFG.ease
       setSmoothProg(smoothProgRef.current)
-      
-      // Calculate frame
-      const idx = Math.min(CFG.frameCount - 1, Math.floor(smoothProgRef.current * (CFG.frameCount - 1)))
-      
+
+      const idx = Math.min(COUNT - 1, Math.floor(smoothProgRef.current * (COUNT - 1)))
       if (idx !== curFrameRef.current) {
         curFrameRef.current = idx
         drawFrame(idx)
       }
 
-      // Update Phase
-      const p = useAppStore.getState().rawProg
-      let newPhase = 0
-      if (p >= 0.33 && p < 0.66) newPhase = 1
-      else if (p >= 0.66) newPhase = 2
-      
-      if (useAppStore.getState().activePhase !== newPhase) {
-        setActivePhase(newPhase)
+      const p = rawProg
+      const newPhase = p >= 0.66 ? 2 : p >= 0.33 ? 1 : 0
+      if (useAppStore.getState().activePhase !== newPhase) setActivePhase(newPhase)
+
+      // Mobile: pause the loop when easing has settled. A scroll listener restarts it.
+      if (mobile && Math.abs(rawProg - smoothProgRef.current) < 0.001) {
+        reqRef.current = null
+        return
       }
 
       reqRef.current = requestAnimationFrame(renderLoop)
     }
 
-    reqRef.current = requestAnimationFrame(renderLoop)
-    return () => cancelAnimationFrame(reqRef.current)
-  }, [setSmoothProg, setActivePhase])
-
-  // Handle Initial Paint
-  useEffect(() => {
-    if (framesRef.current[curFrameRef.current]) {
-      drawFrame(curFrameRef.current)
+    // Re-arm the loop on any scroll event so the pause is invisible to the user.
+    const wakeLoop = () => {
+      if (!reqRef.current) reqRef.current = requestAnimationFrame(renderLoop)
     }
-  }, [canvasRef])
+    if (mobile) window.addEventListener('scroll', wakeLoop, { passive: true })
+
+    reqRef.current = requestAnimationFrame(renderLoop)
+
+    return () => {
+      cancelAnimationFrame(reqRef.current)
+      reqRef.current = null
+      if (mobile) window.removeEventListener('scroll', wakeLoop)
+    }
+  }, [setSmoothProg, setActivePhase])
 }

@@ -7,41 +7,35 @@ import PhaseAbout from './PhaseAbout'
 import PhaseMetrics from './PhaseMetrics'
 import styles from './HeroStage.module.css'
 
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
+
 export default function HeroStage() {
   const canvasRef = useRef(null)
-  
-  // Custom hook handles the frame loading and rendering loop
   useFrameAnimation(canvasRef)
 
-  // We read the smoothed progress from Zustand to drive the depth recession effect
-  const smoothProg = useAppStore((state) => state.smoothProg)
+  // On mobile skip the smoothProg subscription — no breathing zoom to avoid re-renders.
+  const smoothProg = useAppStore((state) => isMobileDevice ? 0 : state.smoothProg)
 
-  // Calculate dynamic styles based on scroll progress
   const getStageStyles = () => {
-    // Subtle breathing zoom in over the entire scroll length
-    const scale = 1 + smoothProg * 0.05 // 1.0 -> 1.05
-    return {
-      opacity: 1,
-      transform: `scale(${scale.toFixed(4)})`,
-      filter: 'blur(0px)'
-    }
+    if (isMobileDevice) return {}
+    const scale = 1 + smoothProg * 0.05
+    return { transform: `scale(${scale.toFixed(4)})` }
   }
 
   return (
     <section className={styles.heroSection}>
-      {/* 
-        Sticky container holds the canvas and text overlay.
-        It stays on screen while the user scrolls down the height of the section.
-      */}
       <div
         className={styles.heroStage}
         style={getStageStyles()}
       >
-        {/* Live nebula sits behind the video; the canvas screen-blends onto it
-            so the dark room dissolves and the subject stands inside the flow. */}
-        <div className={styles.heroNebula}>
-          <NebulaFlow contained />
-        </div>
+        {/* On mobile, the global NebulaFlow (fixed, always on) handles the backdrop.
+            On desktop, a contained instance sits directly behind the video so the
+            screen-blend dissolves the dark room into the nebula flow. */}
+        {!isMobileDevice && (
+          <div className={styles.heroNebula}>
+            <NebulaFlow contained />
+          </div>
+        )}
         <canvas ref={canvasRef} className={styles.heroCanvas} />
         <div className={styles.heroOverlay} />
         <div className={styles.heroGrid} />
