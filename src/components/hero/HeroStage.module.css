@@ -12,17 +12,28 @@
   z-index: 1;
   will-change: transform, opacity;
   transform-origin: center center;
-  background-color: #020813;
+  /* transparent so the contained nebula layer is the hero's base */
+  background-color: transparent;
+}
+
+/* Flowing nebula layer — the hero's living backdrop */
+.heroNebula {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .heroCanvas {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
   display: block;
+  /* dark room dissolves into the nebula; the lit subject glows on top */
+  mix-blend-mode: screen;
 }
 
 .heroOverlay {

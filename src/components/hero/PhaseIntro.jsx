@@ -31,8 +31,13 @@ export default function PhaseIntro() {
       ref={panelRef}
       className={`${styles.phaseContainer} ${isActive ? styles.active : styles.exit}`}
     >
+      <div className={styles.statusBadge}>
+        <span className="status-dot" />
+        Available for Work <span className={styles.spark}>✦</span>
+      </div>
+
       <div className={styles.introTag}>[ AI SYSTEM INITIALIZED ]</div>
-      
+
       <h1 className={`${styles.introName} glitch`} data-text="H. DIVYAN">
         H. DIVYAN
       </h1>

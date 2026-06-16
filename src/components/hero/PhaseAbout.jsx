@@ -10,7 +10,7 @@ export default function PhaseAbout() {
     <div className={`${styles.phaseContainer} ${isActive ? styles.active : styles.exit}`}>
       <div className={styles.heroTag}>[ IDENTITY MATRIX ]</div>
       
-      <div className={styles.aboutInner}>
+      <div className={styles.aboutInner} data-tilt data-tilt-max="5">
         <div className={styles.avatar}>
           <div className={`${styles.avRing} ${styles.r1}`} />
           <div className={`${styles.avRing} ${styles.r2}`} />

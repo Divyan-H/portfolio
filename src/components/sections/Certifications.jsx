@@ -4,18 +4,19 @@ import { certifications } from '@data/certifications'
 export default function Certifications() {
   return (
     <section id="certifications" className="section">
-      <div className={styles.sectionHeader}>
+      <div className={styles.sectionHeader} data-reveal>
         <span className={styles.secTag}>// 05</span>
         <h2 className={styles.secTitle}>CERTIFICATIONS</h2>
         <div className={styles.secLine} />
       </div>
 
-      <div className={styles.certsGrid}>
+      <div className={styles.certsGrid} data-reveal>
         {certifications.map((cert) => (
-          <div 
-            key={cert.name} 
-            className={`${styles.certCard} glass-card ${cert.gold ? styles.gold : ''}`}
+          <div
+            key={cert.name}
+            className={`${styles.certCard} glass-card`}
           >
+            <span className="electric-border" aria-hidden="true" />
             <div className={styles.certIcon}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M12 2L3.5 7V17L12 22L20.5 17V7L12 2Z" />

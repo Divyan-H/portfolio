@@ -13,20 +13,26 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 0.6rem 1.5rem;
-  background: rgba(2, 8, 19, 0.4);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 0.6rem 1.6rem;
+  background:
+    linear-gradient(rgba(5, 10, 24, 0.6), rgba(5, 10, 24, 0.6)) padding-box,
+    linear-gradient(135deg, rgba(0, 212, 255, 0.55), rgba(123, 47, 255, 0.4), rgba(0, 255, 209, 0.45)) border-box;
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid transparent;
   border-radius: 50px;
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1), inset 0 0 20px rgba(0, 212, 255, 0.05);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 30px rgba(0, 212, 255, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: all 0.4s ease;
 }
 
 .scrolled .dockInner {
-  background: rgba(2, 8, 19, 0.85);
-  border-color: rgba(0, 212, 255, 0.5);
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.1);
-  padding: 0.5rem 1.2rem;
+  background:
+    linear-gradient(rgba(5, 10, 24, 0.82), rgba(5, 10, 24, 0.82)) padding-box,
+    linear-gradient(135deg, rgba(0, 212, 255, 0.8), rgba(123, 47, 255, 0.6), rgba(0, 255, 209, 0.7)) border-box;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 36px rgba(0, 212, 255, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1.3rem;
 }
 
 .dockLogo {
@@ -40,11 +46,18 @@
 
 .logoMark {
   color: #fff;
-  background: linear-gradient(135deg, var(--blue), var(--purple));
+  background: linear-gradient(110deg, var(--blue) 20%, #fff 45%, var(--purple) 70%, var(--teal) 95%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 1.2rem;
   letter-spacing: 1px;
+  animation: logo-shimmer 5s linear infinite;
+}
+
+@keyframes logo-shimmer {
+  to { background-position: -220% center; }
 }
 
 .dockDivider {
@@ -60,6 +73,7 @@
 }
 
 .dockLink {
+  position: relative;
   font-family: var(--hud);
   font-size: 0.65rem;
   color: var(--text);
@@ -69,6 +83,24 @@
   align-items: center;
   gap: 0.4rem;
   transition: color 0.3s, text-shadow 0.3s;
+}
+
+/* Center-out animated underline */
+.dockLink::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.dockLink:hover::after {
+  width: 100%;
 }
 
 .dockDot {

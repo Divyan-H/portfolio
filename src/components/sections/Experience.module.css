@@ -34,8 +34,9 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.45), rgba(123, 47, 255, 0.35), transparent);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.35);
   transform: translateX(-50%);
 }
 
@@ -81,8 +82,45 @@
 .tlCard {
   width: 45%;
   padding: 2rem;
-  /* Slower, more cinematic transition */
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease, border-color 0.3s, box-shadow 0.3s;
+  /* Explicitly mirror the glass-card appearance — same as projCard */
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 42%),
+    rgba(10, 18, 40, 0.10);
+  -webkit-backdrop-filter: blur(16px) saturate(195%) brightness(1.08);
+  backdrop-filter: blur(16px) saturate(195%) brightness(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-card);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 -16px 36px -18px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  isolation: isolate;
+  position: relative;
+  will-change: transform;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Neutral specular gloss only — no blue tint overlay */
+.tlCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(130% 95% at 12% -10%, rgba(255, 255, 255, 0.14), transparent 55%);
+  pointer-events: none;
+}
+
+/* Prismatic top edge — matches glass-card::after */
+.tlCard::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5) 30%, rgba(255, 255, 255, 0.85) 50%, rgba(123, 47, 255, 0.5) 70%, transparent);
+  pointer-events: none;
+  filter: blur(0.4px);
 }
 
 .cardHidden {
@@ -96,9 +134,9 @@
 }
 
 .tlCard:hover {
-  transform: translateY(-5px) !important;
-  border-color: var(--blue);
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+  transform: translateY(-8px) scale(1.01) !important;
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: var(--glass-shadow-hover), 0 0 46px rgba(0, 212, 255, 0.28);
 }
 
 /* ── Decorative 3D Shapes ── */
@@ -227,18 +265,26 @@
 }
 
 .tlBadge {
-  background: rgba(0, 212, 255, 0.1);
+  background: rgba(0, 212, 255, 0.08);
   color: var(--blue);
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
 }
 
 .tlDate {
   font-family: var(--mono);
-  color: var(--muted);
+  color: var(--teal);
+  text-shadow: 0 0 10px rgba(0, 255, 209, 0.4);
   font-size: 0.8rem;
+  letter-spacing: 1px;
   margin-bottom: 1rem;
 }
 

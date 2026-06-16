@@ -83,7 +83,7 @@ export default function Experience() {
         <div className={`${styles.hologramRing} ${styles.float1}`} style={{ top: '40%', right: '5%' }} />
       </div>
 
-      <div className={styles.sectionHeader}>
+      <div className={styles.sectionHeader} data-reveal>
         <span className={styles.secTag}>// 02</span>
         <h2 className={styles.secTitle}>EXPERIENCE</h2>
         <div className={styles.secLine} />

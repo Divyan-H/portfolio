@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import useAppStore from '@store/useAppStore'
 import useFrameAnimation from '@hooks/useFrameAnimation'
+import NebulaFlow from '@components/canvas/NebulaFlow'
 import PhaseIntro from './PhaseIntro'
 import PhaseAbout from './PhaseAbout'
 import PhaseMetrics from './PhaseMetrics'
@@ -32,10 +33,15 @@ export default function HeroStage() {
         Sticky container holds the canvas and text overlay.
         It stays on screen while the user scrolls down the height of the section.
       */}
-      <div 
-        className={styles.heroStage} 
+      <div
+        className={styles.heroStage}
         style={getStageStyles()}
       >
+        {/* Live nebula sits behind the video; the canvas screen-blends onto it
+            so the dark room dissolves and the subject stands inside the flow. */}
+        <div className={styles.heroNebula}>
+          <NebulaFlow contained />
+        </div>
         <canvas ref={canvasRef} className={styles.heroCanvas} />
         <div className={styles.heroOverlay} />
         <div className={styles.heroGrid} />

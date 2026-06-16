@@ -52,7 +52,7 @@ export default function PhaseMetrics() {
       
       <div className={styles.metricsGrid}>
         {metrics.map((m, i) => (
-          <div key={m.label} className={styles.metricItem}>
+          <div key={m.label} className={styles.metricItem} data-tilt data-tilt-max="10">
             <div 
               className={styles.metricNum} 
               ref={el => numRefs.current[i] = el}

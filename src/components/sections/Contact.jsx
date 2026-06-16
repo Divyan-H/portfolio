@@ -65,13 +65,13 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section">
-      <div className={styles.sectionHeader}>
+      <div className={styles.sectionHeader} data-reveal>
         <span className={styles.secTag}>// 06</span>
         <h2 className={styles.secTitle}>CONTACT</h2>
         <div className={styles.secLine} />
       </div>
 
-      <div className={`${styles.contactWrap} glass-card`}>
+      <div className={`${styles.contactWrap} glass-card`} data-reveal>
         <div className={styles.contactGrid}>
           <div className={styles.contactInfo}>
             <h3 className={styles.contactTitle}>INITIALIZE CONNECTION</h3>
@@ -92,7 +92,7 @@ export default function Contact() {
             </div>
           </div>
           
-          <div className={styles.terminal} id="terminal" ref={termRef}>
+          <div className={styles.terminal} id="terminal" ref={termRef} data-tilt data-tilt-max="6">
             <div className={styles.termTop}>
               <div className={styles.termDots}>
                 <span style={{background: '#ff5f56'}} />

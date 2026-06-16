@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 5.5rem;
 }
 
 .secTag {
@@ -34,22 +34,21 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
 }
 
+/* Matches the project card hover exactly */
 .certCard:hover {
-  transform: translateX(5px);
-  border-color: var(--blue);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+  transform: translateY(-12px) scale(1.04);
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: var(--glass-shadow-hover), 0 0 46px rgba(0, 212, 255, 0.28);
+  z-index: 20;
 }
 
-.certCard.gold {
-  border-color: rgba(255, 215, 0, 0.3);
-}
-
-.certCard.gold:hover {
-  border-color: gold;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+/* Speed up + brighten the electric border on hover, like the projects */
+.certCard:hover :global(.electric-border) {
+  opacity: 1;
+  animation-duration: 2.4s;
 }
 
 .certIcon {
@@ -59,8 +58,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  color: var(--blue);
+  background: rgba(0, 212, 255, 0.07);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .certInfo {
@@ -97,15 +99,9 @@
   border: 1px solid var(--border);
 }
 
-.gold .certBadge {
-  background: rgba(255, 215, 0, 0.1);
-  color: gold;
-  border-color: rgba(255, 215, 0, 0.3);
-}
-
 @media (max-width: 768px) {
   .sectionHeader {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .certsGrid {
