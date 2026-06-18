@@ -166,8 +166,8 @@
 @media (max-width: 768px) {
   .holoDock {
     top: auto;
-    bottom: 2rem;
-    width: 90vw;
+    bottom: 1.5rem;
+    width: 92vw;
   }
 
   .dockInner {

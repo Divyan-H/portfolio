@@ -24,8 +24,8 @@ export default function useLenis() {
 
     // Listen to scroll events
     lenis.on('scroll', (e) => {
-      // Calculate hero scroll progress (0 to 1) based on reduced scroll length (300vh)
-      const maxScroll = window.innerHeight * 3
+      // Calculate hero scroll progress (0 to 1) based on reduced scroll length (200vh)
+      const maxScroll = window.innerHeight * 2
       const prog = Math.min(1, Math.max(0, e.animatedScroll / maxScroll))
       setRawProg(prog)
       

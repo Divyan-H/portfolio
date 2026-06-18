@@ -1,97 +1,122 @@
+import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import Card3D from '@components/ui/Card3D'
 import styles from './Experience.module.css'
 import { experience } from '@data/experience'
 
-function TimelineItem({ item, index }) {
-  const { ref, inView } = useInView({
-    triggerOnce: false, // Allows the animation to trigger every time you scroll past it
-    threshold: 0.1, 
-    rootMargin: '0px 0px -10% 0px' 
-  })
+const EASE = [0.16, 1, 0.3, 1]
 
-  const animClass = inView ? styles.cardVisible : styles.cardHidden
+function TimelineItem({ item, index }) {
+  const isLeft = index % 2 === 0
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1, rootMargin: '0px 0px -6% 0px' })
 
   return (
     <div className={styles.tlItem} ref={ref}>
       <div className={styles.tlNode}>
-        <div className={styles.tlRing} />
+        <motion.div
+          className={styles.tlRing}
+          animate={inView ? { scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] } : {}}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        />
         <div className={styles.tlDot} />
       </div>
-      
-      {/* Decorative partner shape on the opposite side of the card */}
-      <div className={`${styles.tlDeco} ${animClass}`}>
+
+      {/* Deco side */}
+      <motion.div
+        className={styles.tlDeco}
+        initial={{ opacity: 0, x: isLeft ? 40 : -40, rotateY: isLeft ? 20 : -20 }}
+        animate={inView ? { opacity: 1, x: 0, rotateY: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+        style={{ perspective: '600px' }}
+      >
         <div className={styles.decoHex}>
           <div className={styles.hexPart} />
           <div className={styles.hexPart} />
           <div className={styles.hexPart} />
         </div>
-      </div>
+      </motion.div>
 
-      <div className={`${styles.tlCard} glass-card ${animClass}`}>
-        <div className={styles.cardHeaderDeco}>
-          <span>NODE_ID: {1024 + index * 128}</span>
-          <span>SEQ: 00{index + 1}</span>
-        </div>
-        <div className={styles.tlHead}>
-          <div>
-            <h3 className={styles.tlRole}>{item.role}</h3>
-            <p className={styles.tlCo}>{item.company}</p>
+      {/* 3D Card */}
+      <motion.div
+        className={styles.tlCardWrap}
+        initial={{ opacity: 0, y: 70, scale: 0.88, filter: 'blur(14px)' }}
+        animate={inView ? { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' } : {}}
+        transition={{ duration: 0.9, ease: EASE }}
+      >
+        <Card3D className={`${styles.tlCard} glass-card`} depth={8}>
+          {/* Electric border */}
+          <span className="electric-border" aria-hidden="true" />
+
+          <div className={styles.cardHeaderDeco}>
+            <span>NODE_ID: {1024 + index * 128}</span>
+            <span>SEQ: 00{index + 1}</span>
           </div>
-          <span className={styles.tlBadge}>{item.badge}</span>
-        </div>
-        
-        <p className={styles.tlDate}>[ DATE: {item.year} ]</p>
-        <p className={styles.tlDesc}>{item.description}</p>
-        
-        <div className={styles.tlTags}>
-          {item.tags.map(tag => (
-            <span key={tag} className="tag">{tag}</span>
-          ))}
-        </div>
-      </div>
+          <div className={styles.tlHead}>
+            <div>
+              <h3 className={styles.tlRole}>{item.role}</h3>
+              <p className={styles.tlCo}>{item.company}</p>
+            </div>
+            <span className={styles.tlBadge}>{item.badge}</span>
+          </div>
+
+          <p className={styles.tlDate}>[ DATE: {item.year} ]</p>
+          <p className={styles.tlDesc}>{item.description}</p>
+
+          <div className={styles.tlTags}>
+            {item.tags.map((tag, i) => (
+              <motion.span
+                key={tag}
+                className="tag"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.3, delay: 0.5 + i * 0.07, ease: 'backOut' }}
+              >
+                {tag}
+              </motion.span>
+            ))}
+          </div>
+        </Card3D>
+      </motion.div>
     </div>
   )
 }
 
 export default function Experience() {
+  const { ref: hdrRef, inView: hdrIn } = useInView({ triggerOnce: true, threshold: 0.2 })
+
   return (
     <section id="experience" className="section" style={{ position: 'relative' }}>
-      
-      {/* Floating 3D Decorations */}
-      <div className={styles.decoContainer}>
-        {/* Main Cube */}
-        <div className={`${styles.holoCube} ${styles.float1}`}>
-          <div className={styles.cubeFace} style={{ transform: 'rotateY(0deg) translateZ(30px)' }} />
-          <div className={styles.cubeFace} style={{ transform: 'rotateY(90deg) translateZ(30px)' }} />
-          <div className={styles.cubeFace} style={{ transform: 'rotateY(180deg) translateZ(30px)' }} />
-          <div className={styles.cubeFace} style={{ transform: 'rotateY(-90deg) translateZ(30px)' }} />
-          <div className={styles.cubeFace} style={{ transform: 'rotateX(90deg) translateZ(30px)' }} />
-          <div className={styles.cubeFace} style={{ transform: 'rotateX(-90deg) translateZ(30px)' }} />
-        </div>
 
-        {/* Floating Octahedron 1 */}
+      {/* Floating 3D decorations */}
+      <div className={styles.decoContainer}>
+        <div className={`${styles.holoCube} ${styles.float1}`}>
+          {['rotateY(0deg)','rotateY(90deg)','rotateY(180deg)','rotateY(-90deg)','rotateX(90deg)','rotateX(-90deg)'].map((t, i) => (
+            <div key={i} className={styles.cubeFace} style={{ transform: `${t} translateZ(30px)` }} />
+          ))}
+        </div>
         <div className={`${styles.octahedron} ${styles.float2}`} style={{ top: '20%', left: '10%' }}>
           {[...Array(8)].map((_, i) => <div key={i} className={styles.octaFace} />)}
         </div>
-
-        {/* Floating Octahedron 2 */}
         <div className={`${styles.octahedron} ${styles.float3}`} style={{ top: '60%', right: '10%' }}>
           {[...Array(8)].map((_, i) => <div key={i} className={styles.octaFace} />)}
         </div>
-
-        {/* Holographic Ring */}
         <div className={`${styles.hologramRing} ${styles.float1}`} style={{ top: '40%', right: '5%' }} />
       </div>
 
-      <div className={styles.sectionHeader} data-reveal>
-        <span className={styles.secTag}>// 02</span>
+      <motion.div
+        ref={hdrRef}
+        className={styles.sectionHeader}
+        initial={{ opacity: 0, x: -50, filter: 'blur(10px)' }}
+        animate={hdrIn ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+        transition={{ duration: 0.7, ease: EASE }}
+      >
+        <span className={`${styles.secTag} neon-tag`}>// 02</span>
         <h2 className={styles.secTitle}>EXPERIENCE</h2>
         <div className={styles.secLine} />
-      </div>
+      </motion.div>
 
       <div className={styles.timeline}>
         <div className={styles.tlSpine} />
-
         {experience.map((item, index) => (
           <TimelineItem key={item.id} item={item} index={index} />
         ))}

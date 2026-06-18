@@ -19,6 +19,19 @@ export default function HeroStage() {
   const getStageStyles = () => {
     if (isMobileDevice) return {}
     const scale = 1 + smoothProg * 0.05
+
+    // Exit vortex: last 18 % of hero scroll (smoothProg 0.82 → 1.0)
+    // Zoom in + blur + fade — hero "dissolves" before the curtain reveals Experience
+    const exitT = Math.max(0, Math.min(1, (smoothProg - 0.82) / 0.18))
+    if (exitT > 0) {
+      const e = exitT * exitT  // quadratic ease-in for dramatic acceleration
+      return {
+        transform:  `scale(${(scale + e * 0.14).toFixed(4)})`,
+        filter:     `blur(${(e * 22).toFixed(1)}px) brightness(${(1 - e * 0.55).toFixed(3)})`,
+        opacity:    (1 - e * 0.97).toFixed(4),
+      }
+    }
+
     return { transform: `scale(${scale.toFixed(4)})` }
   }
 

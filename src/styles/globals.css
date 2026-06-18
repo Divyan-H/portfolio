@@ -64,7 +64,7 @@
   --mono:   'JetBrains Mono', 'Share Tech Mono', monospace;
 
   /* ── Spacing ── */
-  --section-pad: clamp(4rem, 8vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+  --section-pad: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 4rem);
 
   /* ── Transitions ── */
   --t-fast:   0.18s ease;
@@ -96,6 +96,11 @@ body {
   overflow-x: hidden;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto; }
+  #cur, #cur-ring, #cur-glow { display: none; }
+}
+
 ::-webkit-scrollbar        { width: 4px; }
 ::-webkit-scrollbar-track  { background: var(--bg-void); }
 ::-webkit-scrollbar-thumb  { background: linear-gradient(var(--blue), var(--purple)); border-radius: 4px; }
@@ -113,6 +118,12 @@ body {
   z-index: 99999;
   box-shadow: 0 0 14px var(--blue), 0 0 28px rgba(0, 212, 255, 0.6);
   mix-blend-mode: screen;
+  transition: width 0.28s ease, height 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
+}
+#cur.cur-hover {
+  width: 5px; height: 5px;
+  background: var(--teal);
+  box-shadow: 0 0 18px var(--teal), 0 0 36px rgba(0, 255, 209, 0.45);
 }
 #cur-ring {
   position: fixed;
@@ -122,6 +133,15 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
+  transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.38s ease,
+              box-shadow 0.38s ease;
+}
+#cur-ring.cur-hover {
+  width: 48px; height: 48px;
+  border-color: rgba(0, 255, 209, 0.55);
+  box-shadow: 0 0 16px rgba(0, 255, 209, 0.18), inset 0 0 8px rgba(0, 255, 209, 0.06);
 }
 #cur-glow {
   position: fixed;
@@ -133,6 +153,10 @@ body {
   background: radial-gradient(circle, rgba(0, 212, 255, 0.12), rgba(123, 47, 255, 0.06) 40%, transparent 70%);
   mix-blend-mode: screen;
   filter: blur(8px);
+  transition: background 0.4s ease;
+}
+#cur-glow.cur-hover {
+  background: radial-gradient(circle, rgba(0, 255, 209, 0.14), rgba(0, 212, 255, 0.07) 40%, transparent 70%);
 }
 
 /* ════════════════════════════════════════════
@@ -388,17 +412,93 @@ footer {
 .gradientCurtain {
   position: relative;
   width: 100%;
-  height: 120px;
-  background: linear-gradient(to bottom, rgba(2, 8, 19, 0.92) 0%, rgba(2, 8, 19, 0.35) 55%, transparent 100%);
+  height: 180px;
+  /* Full opaque black at the top (matches the blacked-out hero exit), opens to transparent */
+  background: linear-gradient(to bottom,
+    rgba(2, 8, 19, 1)    0%,
+    rgba(2, 8, 19, 0.85) 25%,
+    rgba(2, 8, 19, 0.35) 60%,
+    transparent          100%);
   z-index: 10;
   margin-bottom: -1px;
+  overflow: hidden;
+}
+/* Neon portal edge at the hero/section boundary */
+.gradientCurtain::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 5%; right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(123, 47, 255, 0.7) 25%,
+    rgba(0, 212, 255, 0.95) 50%,
+    rgba(123, 47, 255, 0.7) 75%,
+    transparent);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.55), 0 0 40px rgba(123, 47, 255, 0.25);
+  filter: blur(0.3px);
 }
 .gradientCurtain::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0;
   width: 100%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.25), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.15), transparent);
+}
+
+/* ── Per-section ambient glow orbs ── */
+/* Each section gets a unique colored radial bloom behind its content.
+   left:50% + width:100vw + translateX(-50%) breaks out of the 1200px container
+   to span the full viewport while still being position:absolute. */
+#experience::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -5%;
+  transform: translateX(-50%);
+  width: 100vw; height: 110%;
+  background: radial-gradient(ellipse 55% 50% at 18% 38%, rgba(123, 47, 255, 0.11), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+#projects::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -5%;
+  transform: translateX(-50%);
+  width: 100vw; height: 110%;
+  background: radial-gradient(ellipse 60% 55% at 82% 45%, rgba(220, 38, 120, 0.09), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+#skills::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -5%;
+  transform: translateX(-50%);
+  width: 100vw; height: 110%;
+  background: radial-gradient(ellipse 60% 55% at 15% 32%, rgba(0, 212, 255, 0.09), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+#certifications::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -5%;
+  transform: translateX(-50%);
+  width: 100vw; height: 110%;
+  background: radial-gradient(ellipse 55% 50% at 78% 55%, rgba(30, 100, 255, 0.10), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+#contact::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -5%;
+  transform: translateX(-50%);
+  width: 100vw; height: 110%;
+  background: radial-gradient(ellipse 52% 48% at 35% 30%, rgba(0, 220, 130, 0.09), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ════════════════════════════════════════════
@@ -428,6 +528,158 @@ footer {
   --lift: 0px;
   transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
   transition: transform 0.2s ease-out, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* ════════════════════════════════════════════
+   3D & DEPTH SYSTEM
+   ════════════════════════════════════════════ */
+:root {
+  --persp-card:   1100px;
+  --depth-near:   20px;
+  --depth-mid:    10px;
+  --depth-far:    0px;
+  --iris-speed:   6s;
+}
+
+/* Perspective wrapper — every Card3D output gets this */
+.card3d-wrap {
+  perspective: var(--persp-card);
+  perspective-origin: 50% 40%;
+}
+
+/* Iridescent animated border via conic-gradient + hue-rotate */
+@keyframes iris-border {
+  0%   { filter: hue-rotate(0deg)   brightness(1.0); }
+  33%  { filter: hue-rotate(120deg) brightness(1.2); }
+  66%  { filter: hue-rotate(240deg) brightness(1.1); }
+  100% { filter: hue-rotate(360deg) brightness(1.0); }
+}
+
+/* Chromatic aberration shift — for section headers and hero name */
+@keyframes chroma-r {
+  0%,100% { clip-path: polygon(0 0,100% 0,100% 33%,0 33%); transform: translate(-2px,0); }
+  50%      { clip-path: polygon(0 5%,100% 5%,100% 38%,0 38%); transform: translate(-3px,1px); }
+}
+@keyframes chroma-b {
+  0%,100% { clip-path: polygon(0 66%,100% 66%,100% 100%,0 100%); transform: translate(2px,0); }
+  50%      { clip-path: polygon(0 62%,100% 62%,100% 97%,0 97%); transform: translate(3px,-1px); }
+}
+
+/* Depth float keyframe — stagger with nth-child */
+@keyframes depth-float {
+  0%,100% { transform: translateY(0px)   translateZ(0px); }
+  50%      { transform: translateY(-14px) translateZ(18px); }
+}
+
+/* Neon scan line — sweeps across a card from top to bottom */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(400%); opacity: 0; }
+}
+
+/* Iridescent background pulse on glass cards */
+@keyframes glass-iris {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Chromatic text utility ── */
+.chroma-text {
+  position: relative;
+  display: inline-block;
+}
+.chroma-text::before,
+.chroma-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.chroma-text::before {
+  color: rgba(255, 45, 120, 0.75);
+  animation: chroma-r 3.5s ease-in-out infinite;
+}
+.chroma-text::after {
+  color: rgba(0, 212, 255, 0.75);
+  animation: chroma-b 3.5s ease-in-out infinite;
+}
+
+/* ── Iridescent glass card variant ── */
+.glass-iris-card {
+  position: relative;
+  overflow: hidden;
+}
+.glass-iris-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    135deg,
+    rgba(0,212,255,0.08) 0%,
+    rgba(123,47,255,0.10) 25%,
+    rgba(0,255,209,0.07) 50%,
+    rgba(255,45,120,0.06) 75%,
+    rgba(0,212,255,0.08) 100%
+  );
+  background-size: 300% 300%;
+  animation: glass-iris var(--iris-speed) ease infinite;
+  pointer-events: none;
+}
+
+/* ── Scan line on glass card hover ── */
+.glass-scan {
+  position: relative;
+  overflow: hidden;
+}
+.glass-scan::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.6), rgba(123,47,255,0.5), transparent);
+  box-shadow: 0 0 8px rgba(0,212,255,0.5);
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+.glass-scan:hover::after {
+  animation: scan-line 1.4s ease forwards;
+}
+
+/* ── Neon section number tag ── */
+.neon-tag {
+  color: var(--blue);
+  text-shadow: 0 0 8px rgba(0,212,255,0.7), 0 0 20px rgba(0,212,255,0.4);
+  animation: pulse-dot 2.5s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════════
+   GLASS SHIMMER — sweep highlight on hover
+   ════════════════════════════════════════════ */
+@keyframes glass-shine {
+  0%   { transform: translateX(-120%) skewX(-12deg); }
+  100% { transform: translateX(320%)  skewX(-12deg); }
+}
+
+/* Add the shimmer child inside any .glass-card that has data-shine */
+.glass-card[data-shine]::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 28%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.055), transparent);
+  pointer-events: none;
+  transform: translateX(-120%) skewX(-12deg);
+}
+
+.glass-card[data-shine]:hover::after {
+  animation: glass-shine 0.75s ease forwards;
 }
 
 /* ════════════════════════════════════════════

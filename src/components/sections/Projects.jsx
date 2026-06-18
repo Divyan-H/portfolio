@@ -121,7 +121,7 @@ export default function Projects() {
   return (
     <section id="projects" className="section">
       <div className={styles.sectionHeader} data-reveal>
-        <span className={styles.secTag}>// 03</span>
+        <span className={`${styles.secTag} neon-tag`}>// 03</span>
         <h2 className={styles.secTitle}>PROJECTS</h2>
         <div className={styles.secLine} />
       </div>

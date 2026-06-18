@@ -70,12 +70,11 @@
     inset 0 -18px 40px -22px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   isolation: isolate;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 .card:hover {
   border-color: rgba(0, 212, 255, 0.32);
   box-shadow: var(--glass-shadow-hover), 0 0 40px -8px rgba(0, 212, 255, 0.22);
-  transform: translateY(-4px);
 }
 
 /* HUD corner brackets */
@@ -451,10 +450,25 @@
 @media (max-width: 900px) {
   .rowTop, .rowBottom { grid-template-columns: 1fr; }
   .neural { height: 200px; }
+  .bigTitle { font-size: clamp(2.5rem, 10vw, 6rem); }
 }
+
 @media (max-width: 600px) {
+  .bigTitle { font-size: clamp(2rem, 9vw, 3.5rem); }
   .cvBody { flex-direction: column; }
-  .vision { height: 210px; }
-  .statusBar { gap: 1.1rem; }
-  .watermark { font-size: 6rem; }
+  .vision { height: 200px; }
+  .statusBar { gap: 0.9rem; }
+  .watermark { font-size: 5rem; }
+  .card { padding: 1.2rem 1.1rem; }
+  .titleWrap { margin-bottom: 1.8rem; }
+  .statusBar { flex-wrap: wrap; gap: 0.7rem 1.4rem; }
+}
+
+@media (max-width: 420px) {
+  .bigTitle { font-size: clamp(1.8rem, 9vw, 3rem); }
+  .headTitle { font-size: 1.2rem; }
+  .radar { height: 160px; }
+  .radarSvg { width: 160px; height: 160px; }
+  .watermark { display: none; }
+  .cvRight { display: none; }
 }

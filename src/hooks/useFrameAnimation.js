@@ -39,7 +39,7 @@ export default function useFrameAnimation(canvasRef) {
     const STEP   = mobile ? 2 : 1
     const COUNT  = Math.ceil(TOTAL_FRAMES / STEP)
     const dir    = mobile ? 'frames-sm' : 'frames'
-    const path   = (n) => `/${dir}/ezgif-frame-${String(n * STEP + 1).padStart(3, '0')}.jpg`
+    const path   = (n) => `/${dir}/ezgif-frame-${String(n * STEP + 1).padStart(3, '0')}.webp`
 
     let done = 0
     framesRef.current = new Array(COUNT)

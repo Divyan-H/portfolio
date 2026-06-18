@@ -191,11 +191,11 @@
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .cylinderScene {
-    height: 400px;
+    height: 420px;
   }
   .cylinderTrack {
-    width: 300px;
-    height: 300px;
+    width: min(320px, 85vw);
+    height: 320px;
   }
   .projCard    { padding: 1.2rem 1.4rem; }
   .projNum     { font-size: 0.95rem; }
@@ -208,6 +208,15 @@
 }
 
 @media (max-width: 480px) {
-  .cylinderScene  { height: 370px; }
-  .cylinderTrack  { width: 260px; height: 280px; }
+  .cylinderScene  { height: 400px; }
+  .cylinderTrack  { width: min(290px, 82vw); height: 300px; }
+  .projCard       { padding: 1rem 1.1rem; }
+  .projDesc       { font-size: 0.75rem; }
+  .sectionHeader  { margin-bottom: 3rem; }
+}
+
+@media (max-width: 360px) {
+  .cylinderTrack  { width: 270px; height: 290px; }
+  .navPrev        { left: 0.2rem; }
+  .navNext        { right: 0.2rem; }
 }

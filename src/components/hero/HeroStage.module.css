@@ -1,6 +1,8 @@
 .heroSection {
   position: relative;
   min-height: 100vh;
+  /* Paint the hero above any section that bleeds into its scroll range via negative margins */
+  z-index: 20;
 }
 
 .heroStage {
@@ -63,6 +65,6 @@
 }
 
 .scrollDriver {
-  height: 300vh; /* Reduced from 500vh */
+  height: 200vh;
   width: 100%;
 }

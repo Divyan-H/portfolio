@@ -79,8 +79,12 @@
   box-shadow: 0 0 10px var(--blue);
 }
 
-.tlCard {
+.tlCardWrap {
   width: 45%;
+}
+
+.tlCard {
+  width: 100%;
   padding: 2rem;
   /* Explicitly mirror the glass-card appearance — same as projCard */
   background:
@@ -99,7 +103,7 @@
   isolation: isolate;
   position: relative;
   will-change: transform;
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 /* Neutral specular gloss only — no blue tint overlay */
@@ -134,7 +138,6 @@
 }
 
 .tlCard:hover {
-  transform: translateY(-8px) scale(1.01) !important;
   border-color: rgba(0, 212, 255, 0.5);
   box-shadow: var(--glass-shadow-hover), 0 0 46px rgba(0, 212, 255, 0.28);
 }
@@ -346,26 +349,26 @@
 
 @media (max-width: 768px) {
   .tlDeco {
-    display: none; /* Hide on mobile to keep timeline clean */
+    display: none;
   }
   .tlSpine {
     left: 15px;
   }
-  
+
   .tlNode {
     left: 15px;
   }
-  
+
   .tlItem, .tlItem:nth-child(even) {
     flex-direction: column;
     align-items: flex-start;
     padding-left: 40px;
     margin-bottom: 2.5rem;
   }
-  
+
   .tlCard {
     width: 100%;
-    padding: 1.2rem; /* Much smaller padding on mobile */
+    padding: 1.2rem;
   }
 
   .tlRole {
@@ -385,5 +388,16 @@
     font-size: 0.5rem;
     margin-bottom: 0.5rem;
   }
+}
+
+@media (max-width: 480px) {
+  .tlCard { padding: 1rem; }
+  .tlRole { font-size: 0.9rem; }
+  .tlDesc { font-size: 0.78rem; margin-bottom: 1rem; }
+  .tlBadge { font-size: 0.58rem; padding: 0.2rem 0.55rem; }
+  .tlDate { font-size: 0.72rem; margin-bottom: 0.7rem; }
+  .sectionHeader { margin-bottom: 2.5rem; }
+  .tlItem, .tlItem:nth-child(even) { padding-left: 35px; margin-bottom: 2rem; }
+  .tlHead { flex-wrap: wrap; gap: 0.4rem; }
 }
 
